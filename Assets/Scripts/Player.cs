@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float jumpSpeed;
 
-    private bool onGround = false;
+    public bool onGround = true;
 
     PlayerInput playerInput;
     Rigidbody2D rb;
@@ -37,11 +37,7 @@ public class Player : MonoBehaviour
                 transform.localScale.y,
                 transform.localScale.z);
         }
-    }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        onGround = true;
         if (onGround)
         {
             if (playerInput.actions["Jump"].WasPressedThisFrame())
@@ -49,6 +45,12 @@ public class Player : MonoBehaviour
                 rb.linearVelocityY = jumpSpeed;
             }
         }
+    }
+
+    
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        onGround = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
