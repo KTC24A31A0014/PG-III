@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float jumpSpeed;
 
+    private bool onGround = false;
+
     PlayerInput playerInput;
     Rigidbody2D rb;
 
@@ -23,9 +25,34 @@ public class Player : MonoBehaviour
 
         rb.linearVelocityX = move.x * speed;
 
-        if (playerInput.actions["Jump"].WasPressedThisFrame())
+        if (move.x < 0)
         {
-            rb.linearVelocityY = jumpSpeed;
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x),
+                transform.localScale.y,
+                transform.localScale.z);
         }
+        else if(move.x > 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x),
+                transform.localScale.y,
+                transform.localScale.z);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        onGround = true;
+        if (onGround)
+        {
+            if (playerInput.actions["Jump"].WasPressedThisFrame())
+            {
+                rb.linearVelocityY = jumpSpeed;
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        onGround = false;
     }
 }
